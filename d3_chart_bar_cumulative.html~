@@ -177,7 +177,7 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
 		    .attr("x2", function(d) { return x(d3.min(x)); })
         .attr("y2", function(d) { return y(d.y); });
 
-  
+  /*
   //The vertical dashed line that appears when a circle marker is moused over
 	g.append("line")
         .attr("class", "y")
@@ -189,10 +189,10 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
         .attr("y1", function(d) { return y(d.y); })
 		    .attr("x2", function(d) { return x(d.date); })
         .attr("y2", height);
-  
+  */
 
    //bars are selected again to add the mouseover functions
- 	 g.selectAll("circle")
+ 	 g.selectAll("rect")
 			.on("mouseover", function(d) {	
             console.log('mouseover');	
             div.transition()		
