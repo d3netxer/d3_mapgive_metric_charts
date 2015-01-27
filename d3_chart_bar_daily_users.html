@@ -169,7 +169,8 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
         .attr("class", "x")
         .attr("id", "dashedLine")
         .style("stroke", "steelblue")
-        .style("stroke-dasharray", "3,3")
+        .style("stroke-dasharray", "4,3")
+        .style("stroke-width", "2px")
         .style("opacity", 0)
         .attr("x1", function(d) { return x(d.date); })
         .attr("y1", function(d) { return y(d.total_km); })
@@ -198,7 +199,7 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
             div.transition()		
                .duration(200)		
                .style("opacity", .9);	
-            div.html(formatCount(d.total_km) + " changesets" + "<br/>" + formatTime(d.date))	
+            div.html(formatCount(d.total_km) + " users" + "<br/>" + formatTime(d.date))	
                .style("left", (d3.event.pageX - 20) + "px")
       		     .style("top", (d3.event.pageY + 6) + "px");
 	          //selects the horizontal dashed line in the group
