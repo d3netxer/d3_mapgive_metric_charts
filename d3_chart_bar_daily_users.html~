@@ -78,11 +78,11 @@ var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left");
 
-
+/*
 var line = d3.svg.line()
     .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.y); });
-
+    .y(function(d) { return y(d.total_km); });
+*/
 
 var div = d3.select("body").append("div")   
     .attr("class", "tooltip")               
@@ -119,13 +119,13 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
     d.date = parseDate.parse(d.date);
 	  //console.log(d.date);
     //the + operator in javascript coerces strings to numbers 
-    d.y = +d.cumulative;
-    //console.log(d.y);
+    d.total_km = +d.daily_users;
+    //console.log(d.total_km);
   });
 
   //using imported data to define extent of x and y domains
   x.domain(d3.extent(data, function(d) { return d.date; }));
-  y.domain(d3.extent(data, function(d) { return d.y; }));
+  y.domain(d3.extent(data, function(d) { return d.total_km; }));
 
   // Draw the y Grid lines
 	svg.append("g")            
@@ -135,72 +135,71 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
 			.tickFormat("")
 		)
   
+  /*
   svg.append("path")
       .datum(data)
       .attr("class", "line")
       .attr("d", line);
-  
+  */
+
   //taken from http://bl.ocks.org/mbostock/3887118
   //and http://www.d3noob.org/2013/01/change-line-chart-into-scatter-plot.html
   //appending a group(g) to each data element and will append a rect(bar) and 1 line inside each group
   var g = svg.selectAll().data(data).enter().append("g");
 
   //each bar
-/*
   g.append("rect")
           .style("fill", "steelblue")
           .attr("x", function(d) { return x(d.date); })
           .attr("width", 4)
-          .attr("y", function(d) { return y(d.y); })
-          .attr("height", function(d) { return height - y(d.y); });
-*/
+          .attr("y", function(d) { return y(d.total_km); })
+          .attr("height", function(d) { return height - y(d.total_km); });
 
   //The markers on the top of the bar
-  
+  /*
 	 g.append("circle")
          //circle radius is increased
-        .attr("r", 2.5)
+        .attr("r", 4.5)
         .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y(d.y); });
-   
+        .attr("cy", function(d) { return y(d.total_km); });
+   */
 
    //The horizontal dashed line that appears when a bar is moused over
 	 g.append("line")
         .attr("class", "x")
         .attr("id", "dashedLine")
         .style("stroke", "steelblue")
-        .style("stroke-dasharray", "3,3")
-        .style("stroke-width", "2px")
+        .style("stroke-dasharray", "4,3")
+        .style("stroke-width", "2.5px")
         .style("opacity", 0)
         .attr("x1", function(d) { return x(d.date); })
-        .attr("y1", function(d) { return y(d.y); })
+        .attr("y1", function(d) { return y(d.total_km); })
 		    //d3.min gets the min date from the date x-axis scale
 		    .attr("x2", function(d) { return x(d3.min(x)); })
-        .attr("y2", function(d) { return y(d.y); });
+        .attr("y2", function(d) { return y(d.total_km); });
 
-  
+  /*
   //The vertical dashed line that appears when a circle marker is moused over
 	g.append("line")
         .attr("class", "y")
         .attr("id", "dashedLine")
         .style("stroke", "steelblue")
         .style("stroke-dasharray", "3,3")
-        .style("stroke-width", "2px")
         .style("opacity", 0)
         .attr("x1", function(d) { return x(d.date); })
-        .attr("y1", function(d) { return y(d.y); })
+        .attr("y1", function(d) { return y(d.total_km); })
 		    .attr("x2", function(d) { return x(d.date); })
         .attr("y2", height);
-  
+  */
 
    //bars are selected again to add the mouseover functions
- 	 g.selectAll("circle")
+ 	 g.selectAll("rect")
 			.on("mouseover", function(d) {	
             console.log('mouseover');	
             div.transition()		
                .duration(200)		
                .style("opacity", .9);	
-            div.html(formatCount(d.y) + " changesets" + "<br/>" + formatTime(d.date))	
+            div.html(formatCount(d.total_km) + " users" + "<br/>" + formatTime(d.date))	
                .style("left", (d3.event.pageX - 20) + "px")
       		     .style("top", (d3.event.pageY + 6) + "px");
 	          //selects the horizontal dashed line in the group
@@ -252,12 +251,12 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
         .text("Date");
 
   svg.append("text")      // text label for the y-axis
-        .attr("y",30 - margin.left)
+        .attr("y",40 - margin.left)
         .attr("x",50 - (height / 2))
         .attr("transform", "rotate(-90)")
         .style("text-anchor", "end")
         .style("font-size", "16px")
-        .text("changesets");
+        .text("Daily Users");
 
   //http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html
   svg.append("text")      // text label for chart Title
@@ -266,7 +265,7 @@ d3.csv("mapgive-changeset-daily.csv", function(error, data) {
         .style("text-anchor", "middle")
 		    .style("font-size", "16px") 
         .style("text-decoration", "underline") 
-        .text("MapGive Cumulative Changesets in 2014");
+        .text("MapGive Daily Users in 2014");
 
   svg.append("g")
       .attr("class", "y axis")
